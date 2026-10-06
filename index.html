@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bienvenue à l'ISBST</title>
+<meta name="description" content="Devine les lieux de la faculté ISBST grâce à trois indices. Un jeu de piste pour les étudiants.">
+<meta property="og:title" content="Devine le lieu à l'ISBST">
+<meta property="og:description" content="Saurez-vous reconnaître les lieux de la faculté ? Trois indices, un rang universitaire à la clé.">
+<meta property="og:type" content="website">
+<meta name="theme-color" content="#c2307a">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcode-generator/1.4.4/qrcode.min.js"></script>
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,700;1,500&family=Jost:wght@400;500&display=swap">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+--bg:#fdeef3;--ink:#4a1530;--panel:#fff6f9;--gold:#c2307a;--soft:#8a5a70;--ok:#1f6b4a;--ko:#a3202f}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a0f1e;--ink:#ffe9f2;--panel:#3a1630;--gold:#ff8fbd;--soft:#d9a3bb;--ok:#7fd1a2;--ko:#f0907c}}
+:root[data-theme="dark"]{--bg:#2a0f1e;--ink:#ffe9f2;--panel:#3a1630;--gold:#ff8fbd;--soft:#d9a3bb;--ok:#7fd1a2;--ko:#f0907c}
+*,*::before,*::after{box-sizing:inherit}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Jost,system-ui,sans-serif;line-height:1.55;min-height:100vh}
+main{max-width:36rem;margin:0 auto;padding:2rem 1.1rem 3rem}
+h1{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500;font-size:clamp(2.6rem,9vw,3.6rem);line-height:1.02;margin:0 0 .6rem;text-align:center}
+.sub{text-align:center;color:var(--soft);margin:0 auto 1.8rem;max-width:26rem}
+.bar{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.5rem;color:var(--soft)}
+.bar b{font-family:"Cormorant Garamond",Georgia,serif;font-size:1.7rem;color:var(--gold);font-weight:700}
+.prog{height:1px;background:color-mix(in srgb,var(--gold) 30%,transparent);margin-bottom:1.4rem}
+.prog i{display:block;height:3px;margin-top:-1px;background:var(--gold);transition:width .4s}
+.clues{background:var(--panel);border:1px solid var(--gold);outline:1px solid var(--gold);outline-offset:5px;padding:1.4rem 1.5rem;margin:0 6px 1.6rem}
+.clues p{margin:0;font-family:"Cormorant Garamond",Georgia,serif;font-size:1.35rem;line-height:1.35}
+.clues p+p{margin-top:.9rem;padding-top:.9rem;border-top:1px solid color-mix(in srgb,var(--gold) 35%,transparent)}
+.pts{margin-top:1rem;font-size:.9rem;color:var(--soft)}
+.choices{margin:1.2rem 0}
+button{font:inherit;color:inherit;cursor:pointer}
+.choice{display:block;width:100%;text-align:left;padding:.85rem .2rem;background:none;border:0;border-bottom:1px solid color-mix(in srgb,var(--gold) 40%,transparent);font-family:"Cormorant Garamond",Georgia,serif;font-size:1.4rem;font-weight:700}
+.choice:hover:not(:disabled){color:var(--gold);padding-left:.7rem}
+.choice.ok{color:var(--ok);border-bottom-color:var(--ok)}
+.choice.ko{color:var(--ko);text-decoration:line-through;border-bottom-color:var(--ko)}
+.main{padding:.8rem 1.8rem;border:1px solid var(--gold);background:var(--gold);color:#3a0b21;font-weight:500;letter-spacing:.04em}
+.main:hover{background:transparent;color:var(--gold)}
+.ghost{padding:.55rem 1.2rem;border:1px solid var(--gold);background:none;color:var(--gold)}
+.ghost:hover:not(:disabled){background:var(--gold);color:var(--bg)}
+button:disabled{opacity:.45;cursor:default}
+:focus-visible{outline:2px solid var(--gold);outline-offset:3px}
+#msg{min-height:1.8rem;font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:1.3rem;margin:.8rem 0}
+.end{text-align:center;padding:2rem 0}.end .big{font-family:"Cormorant Garamond",Georgia,serif;font-size:4.5rem;color:var(--gold);font-weight:700}
+.end p{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:1.5rem;margin:.4rem 0 1.6rem}
+@media (prefers-reduced-motion:reduce){.prog i{transition:none}}
+
+.frame{border:1px solid var(--gold);outline:1px solid var(--gold);outline-offset:6px;margin:8px;padding:2rem 1.4rem 2.2rem;text-align:center;background:var(--panel)}
+.crest{width:104px;height:auto;margin:0 auto 1rem;display:block;color:var(--gold)}
+.crest .d{stroke-dasharray:1;stroke-dashoffset:0}
+@media (prefers-reduced-motion:no-preference){.crest .d{animation:draw 2.4s ease-out both}.crest .r{animation:fade 1s 2s both}@keyframes draw{from{stroke-dashoffset:1}to{stroke-dashoffset:0}}@keyframes fade{from{opacity:0}to{opacity:1}}}
+.inst{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-size:1.25rem;color:var(--gold);margin:0 0 1.2rem}
+.lead{max-width:25rem;margin:0 auto 1rem}
+.rules{color:var(--soft);font-size:.95rem;margin:0 auto 1.6rem;max-width:25rem}
+.end small{display:block;color:var(--soft);margin-bottom:1.2rem}
+
+:root{--g:linear-gradient(100deg,#b0286a 0%,#ff9cc4 25%,#e0518f 50%,#ffd1e4 70%,#c2307a 100%)}
+body{background:radial-gradient(ellipse 80% 45% at 50% 0,color-mix(in srgb,var(--gold) 26%,transparent),transparent 70%),var(--bg);background-attachment:fixed}
+h1,.bar b,.end .big{background:var(--g);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
+.frame{position:relative;box-shadow:0 0 38px color-mix(in srgb,var(--gold) 30%,transparent),inset 0 0 50px color-mix(in srgb,var(--gold) 14%,transparent);background:radial-gradient(circle at 50% 0,color-mix(in srgb,var(--gold) 18%,var(--panel)),var(--panel) 65%)}
+.crest{filter:drop-shadow(0 0 7px color-mix(in srgb,var(--gold) 70%,transparent))}
+.clues{box-shadow:0 0 24px color-mix(in srgb,var(--gold) 22%,transparent),inset 0 1px 0 color-mix(in srgb,#fff 35%,transparent)}
+.prog i{background:var(--g);box-shadow:0 0 10px var(--gold)}
+.choice:hover:not(:disabled){text-shadow:0 0 12px color-mix(in srgb,var(--gold) 70%,transparent)}
+.main{position:relative;overflow:hidden;background:var(--g);background-size:220% 100%;border-color:#ffd6e7;color:#3a0b21;box-shadow:0 0 18px color-mix(in srgb,var(--gold) 55%,transparent),inset 0 1px 0 #fff8;font-weight:500}
+.main:hover{background:var(--g);color:#3a0b21;box-shadow:0 0 28px var(--gold),inset 0 1px 0 #fff8}
+.main::after{content:"";position:absolute;top:0;bottom:0;left:-60%;width:40%;background:linear-gradient(100deg,transparent,#fff0f6cc,transparent);transform:skewX(-20deg)}
+.ghost{box-shadow:0 0 10px color-mix(in srgb,var(--gold) 30%,transparent)}
+.sparks{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.spark{position:absolute;width:var(--s);height:var(--s);background:#ffe3ef;clip-path:polygon(50% 0,60% 40%,100% 50%,60% 60%,50% 100%,40% 60%,0 50%,40% 40%);opacity:0}
+@media (prefers-reduced-motion:no-preference){
+h1,.bar b,.end .big{animation:sheen 6s linear infinite}
+.main::after{animation:sweep 3.2s ease-in-out infinite}
+.spark{animation:twinkle 3.6s ease-in-out infinite}
+@keyframes sheen{from{background-position:0 0}to{background-position:-220% 0}}
+@keyframes sweep{0%,55%{left:-60%}100%{left:130%}}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.3) rotate(0)}50%{opacity:.95;transform:scale(1) rotate(45deg)}}}
+@media (prefers-reduced-motion:reduce){.spark{opacity:.55}}
+
+.share{margin-top:1.4rem}.share summary{display:inline-block;list-style:none;cursor:pointer}.share summary::-webkit-details-marker{display:none}
+.sbox{margin-top:1rem;display:grid;gap:.8rem;justify-items:center}
+.qr{width:170px;padding:6px;background:#fff;border-radius:8px;box-shadow:0 0 18px color-mix(in srgb,var(--gold) 40%,transparent)}.qr svg{display:block;width:100%;height:auto}
+.sbox input{width:100%;max-width:22rem;padding:.55rem .8rem;background:var(--bg);color:var(--ink);border:1px solid var(--gold);font:inherit;font-size:.85rem;text-align:center}
+.sm{min-height:1.2rem;margin:0;font-size:.9rem;color:var(--soft)}
+</style>
+</head>
+<body>
+<main><div id="app"></div></main>
+<script>
+const PLACES=[
+["Amphithéâtre",["Deux cents places, et tu t'assois toujours à la même.","Le micro grésille, et au fond, certains font une sieste de très haut niveau.","On y prend des notes… ou des photos des diapos du voisin."]],
+["Laboratoire de TP",["On y enfile une blouse blanche pour se sentir scientifique.","On pipette en retenant son souffle pour que la goutte tombe au bon endroit.","Le compte rendu prend trois fois plus de temps que le TP lui-même."]],
+["Bibliothèque",["Le silence y est sacré : même ton stylo se fait discret.","En période de partiels, une place libre vaut de l'or.","On y entre pour réviser et on en ressort avec la trace du coussin sur la joue."]],
+["Buvette",["Le café y est le carburant officiel de la faculté.","On hésite cinq minutes devant le même sandwich, puis on le prend quand même.","C'est la première escale après un cours qui a duré trop longtemps."]],
+["Secrétariat",["On y va avec trois photocopies, et il en manque toujours une.","Un guichet, une queue, et la phrase « revenez demain ».","Attestations et relevés de notes : le Graal administratif."]],
+["Salle d'informatique",["Chaque PC a son avis personnel sur le moment où il va planter.","On y fait de la bioinformatique, quand le réseau est de bonne humeur.","Le curseur tourne en rond, comme les étudiants avant un rendu."]],
+["Salle de TD",["Plus petite que l'amphi, donc impossible de se cacher.","Le chargé de TD pose une question et tout le monde étudie soudain son stylo.","On y corrige les séries d'exercices au tableau."]],
+["Cour de la faculté",["Pas de plafond, juste le ciel et des groupes qui discutent.","« Je t'attends dans la cour » veut généralement dire vingt minutes.","On y révise à la dernière minute, debout, polycopié en main."]],
+["Salle des examens",["Ici, même les mouches osent à peine voler.","Les surveillants circulent et ton cœur bat plus fort que l'horloge.","On y entre avec sa carte d'étudiant et des révisions qui s'évaporent."]],
+["Parking",["Le premier lieu vu le matin, parfois en courant.","Les places y sont rares, et celles qui restent sont toujours les plus loin.","Les voitures du personnel y dorment, les étudiants y arrivent essoufflés."]],
+["Resto",["On y mange, mais surtout on y fait la queue, plateau en main.","Le menu du jour est une surprise qui ne surprend plus personne.","À prix d'étudiant : le meilleur rapport quantité-prix de la fac."]],
+["Département",["Chaque filière a le sien, et on n'y entre qu'avec une bonne raison.","Les affiches d'avis s'y renouvellent plus vite que ton planning.","On y voit un responsable pour une question de cours ou de filière."]],
+["Foyer",["Le seul lieu où « je travaille » signifie « je discute ».","Clubs, associations et canapés qui en ont vu de belles.","On y prépare des activités… et on y oublie l'heure."]],
+["Salle de master",["Petite salle où tout le monde se connaît, donc personne ne peut disparaître.","On y suit des cours pointus en parlant de son projet de recherche.","Ici, les « questions rapides » durent quarante minutes."]],
+["Bureau des techniciens",["Sans eux, le labo s'arrête, et ils le savent.","On leur demande réactifs et verrerie, et on s'excuse pour l'appareil cassé.","Ils préparent les TP avant même que tu arrives avec ta blouse."]]
+];
+const OK=["Mention très bien.","Les félicitations du jury.","Digne d'un major de promo."];
+const KO=["Rattrapage en vue.","Le jury est dubitatif.","Absent à l'appel de la bonne réponse."];
+const CREST=`<svg class="crest" viewBox="0 0 100 124" aria-hidden="true"><circle cx="50" cy="50" r="46" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="50" cy="50" r="41" fill="none" stroke="currentColor" stroke-width=".7"/><g fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path class="d" pathLength="1" d="M42.7 22 L39.5 24 L37.6 26 L37.0 28 L38.0 30 L40.3 32 L43.7 34 L47.9 36 L52.3 38 L56.4 40 L59.8 42 L62.1 44 L63.0 46 L62.4 48 L60.4 50 L57.2 52 L53.2 54 L48.8 56 L44.5 58 L40.9 60 L38.3 62 L37.1 64 L37.3 66 L39.0 68 L42.0 70 L45.8 72 L50.2 74 L54.5 76 L58.3 78"/><path class="d" pathLength="1" d="M57.3 22 L60.5 24 L62.4 26 L63.0 28 L62.0 30 L59.7 32 L56.3 34 L52.1 36 L47.7 38 L43.6 40 L40.2 42 L37.9 44 L37.0 46 L37.6 48 L39.6 50 L42.8 52 L46.8 54 L51.2 56 L55.5 58 L59.1 60 L61.7 62 L62.9 64 L62.7 66 L61.0 68 L58.0 70 L54.2 72 L49.8 74 L45.5 76 L41.7 78"/></g><g class="r" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"><line x1="37.6" y1="26" x2="62.4" y2="26"/><line x1="41.9" y1="33" x2="58.1" y2="33"/><line x1="56.4" y1="40" x2="43.6" y2="40"/><line x1="62.9" y1="47" x2="37.1" y2="47"/><line x1="53.2" y1="54" x2="46.8" y2="54"/><line x1="39.5" y1="61" x2="60.5" y2="61"/><line x1="39.0" y1="68" x2="61.0" y2="68"/><line x1="52.4" y1="75" x2="47.6" y2="75"/></g><text x="50" y="118" text-anchor="middle" font-family="Cormorant Garamond,Georgia,serif" font-weight="700" font-size="17" letter-spacing="4" fill="currentColor">ISBST</text></svg>`;
+const $=s=>document.querySelector(s),app=$('#app'),pick=a=>a[Math.random()*a.length|0];
+const shuffle=a=>{a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.random()*(i+1)|0;[a[i],a[j]]=[a[j],a[i]]}return a};
+let order,i,score,shown,done;
+const SP=()=>`<div class="sparks">${Array.from({length:16},()=>`<i class="spark" style="left:${Math.random()*96|0}%;top:${Math.random()*96|0}%;--s:${8+Math.random()*12|0}px;animation-delay:-${(Math.random()*3.6).toFixed(1)}s"></i>`).join('')}</div>`;
+const SHARE_URL=location.href.split('#')[0];
+function qrSvg(t){try{const q=qrcode(0,'M');q.addData(t);q.make();const n=q.getModuleCount();let d='';for(let r=0;r<n;r++)for(let c=0;c<n;c++)if(q.isDark(r,c))d+=`M${c} ${r}h1v1h-1z`;return `<svg viewBox="-2 -2 ${n+4} ${n+4}" shape-rendering="crispEdges" role="img" aria-label="QR code du jeu"><rect x="-2" y="-2" width="${n+4}" height="${n+4}" fill="#fff"/><path d="${d}" fill="#000"/></svg>`}catch(e){return ''}}
+function shareBlock(){return `<details class="share"><summary class="ghost">Inviter des amis</summary><div class="sbox"><button class="main" data-share>Partager le lien</button><div class="qr">${qrSvg(SHARE_URL)}</div><input readonly value="${SHARE_URL}" aria-label="Lien du jeu"><p class="sm" role="status"></p></div></details>`}
+function wireShare(txt){const d=document.querySelector('.share');if(!d)return;const b=d.querySelector('[data-share]'),st=d.querySelector('.sm'),inp=d.querySelector('input');inp.onfocus=()=>inp.select();
+ b.onclick=async()=>{const data={title:"Devine le lieu à l'ISBST",text:txt,url:SHARE_URL};
+  try{if(navigator.share){await navigator.share(data);return}}catch(e){if(e&&e.name==='AbortError')return}
+  try{await navigator.clipboard.writeText(txt+' '+SHARE_URL);st.textContent='Lien copié, colle-le dans ta conversation.'}catch(e){inp.select();st.textContent='Copie le lien ci-dessus.'}}}
+function intro(){
+ app.innerHTML=`<div class="frame">${SP()}${CREST}<h1>Bienvenue à l'ISBST</h1>
+ <p class="inst">Institut Supérieur de Biotechnologie de Sidi Thabet</p>
+ <p class="lead">${PLACES.length} lieux de la faculté se cachent derrière quelques indices. Saurez-vous les reconnaître sans vous perdre dans les couloirs ?</p>
+ <p class="rules">Trois indices par lieu. Une bonne réponse rapporte 3, 2 ou 1 point. Un rang universitaire vous attend à la sortie.</p>
+ <button class="main" id="enter">Franchir le seuil</button>${shareBlock()}</div>`;
+ $('#enter').onclick=start;
+ wireShare("Saurez-vous reconnaître les lieux de l'ISBST grâce à trois indices ? Essaie le jeu :");
+}
+function start(){order=shuffle(PLACES);i=0;score=0;round()}
+function round(){
+ shown=1;done=false;
+ const name=order[i][0];
+ const opts=shuffle([name,...shuffle(PLACES.filter(p=>p[0]!==name)).slice(0,3).map(p=>p[0])]);
+ app.innerHTML=`<div class="bar"><span>Lieu ${i+1} sur ${PLACES.length}</span><b>${score}</b></div>
+ <div class="prog"><i style="width:${i/PLACES.length*100}%"></i></div>
+ <div class="clues" id="clues" aria-live="polite"></div>
+ <button class="ghost" id="more">Demander un indice au prof</button>
+ <div class="choices">${opts.map(o=>`<button class="choice" data-n="${o.replace(/"/g,'&quot;')}">${o}</button>`).join('')}</div>
+ <div id="msg" aria-live="polite"></div><div id="next"></div>`;
+ drawClues();
+ $('#more').onclick=()=>{if(shown<3){shown++;drawClues()}};
+ document.querySelectorAll('.choice').forEach(b=>b.onclick=()=>answer(b));
+}
+function drawClues(){
+ $('#clues').innerHTML=order[i][1].slice(0,shown).map(c=>`<p>${c}</p>`).join('')+`<div class="pts">Cette manche vaut ${4-shown} point${4-shown>1?'s':''}.</div>`;
+ $('#more').disabled=shown>=3||done;
+}
+function answer(btn){
+ if(done)return;done=true;
+ const name=order[i][0],good=btn.dataset.n===name;
+ document.querySelectorAll('.choice').forEach(b=>{b.disabled=true;if(b.dataset.n===name)b.classList.add('ok')});
+ if(good){score+=4-shown;$('#msg').textContent=`${pick(OK)} +${4-shown} point${4-shown>1?'s':''}.`}
+ else{btn.classList.add('ko');$('#msg').textContent=`${pick(KO)} C'était : ${name}.`}
+ $('#more').disabled=true;
+ const last=i===PLACES.length-1;
+ $('#next').innerHTML=`<button class="main" id="go">${last?'Recevoir mon diplôme':'Lieu suivant'}</button>`;
+ $('#go').focus();
+ $('#go').onclick=()=>{if(last)finish();else{i++;round()}};
+}
+function finish(){
+ const max=PLACES.length*3,r=score/max;
+ const [rank,t]=r>=.8?["Doyen honoris causa","Le conseil scientifique se lève pour vous applaudir."]:r>=.5?["Major de promotion","Une chaise vous attend à la buvette, avec un café offert."]:["Étudiant de première année","Prenez un plan du campus, la rentrée est longue."];
+ app.innerHTML=`<div class="frame end">${SP()}${CREST}<p class="inst">Diplôme de reconnaissance des lieux</p><div class="big">${score} / ${max}</div><h1 style="font-size:2.2rem">${rank}</h1><p>${t}</p><button class="main" id="again">Rejouer</button>${shareBlock()}</div>`;
+ $('#again').onclick=intro;
+ wireShare(`J'ai obtenu ${score}/${max} (${rank}) au jeu des lieux de l'ISBST. Fais mieux :`);
+}
+intro();
+</script>
+</body>
+</html>
